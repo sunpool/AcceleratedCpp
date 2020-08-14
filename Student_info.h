@@ -12,6 +12,9 @@ struct Student_info
     std::vector<double> hws;
 };
 
+auto compare = [](const Student_info& a, const Student_info& b) {
+    return a.name < b.name;
+};
 std::istream& read_hw(std::istream& , std::vector<double>& );
 std::istream& read(std::istream& , Student_info& );
 
