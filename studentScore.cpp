@@ -71,9 +71,9 @@ std::istream& read_hw(std::istream& in, vector<double>& hws)
 
 std::istream& read(std::istream& in, Student_info& s)
 {
-    cout << "Enter Name, midterm score, and final score: " << endl;
+    // cout << "Enter Name, midterm score, and final score: " << endl;
     in >> s.name >> s.midterm >> s.final;
-    cout << "Enter homework scores: " << endl;
+    // cout << "Enter homework scores: " << endl;
     read_hw(in, s.hws);
     return in;
 }
@@ -83,26 +83,36 @@ int main()
     vector<Student_info> students;
     Student_info sif;
 
-    while ( read(cin, sif))
+    string::size_type maxl = 0;
+    cout << "Enter student records as: Name midterm final hw1 hw2 hw3 ..." << endl;
+    while ( read(cin, sif) )
     {
+        maxl = std::max(maxl, sif.name.size());
         students.push_back(sif);
+        cout << sif.name << endl;
+    }
+    cout << "Total number of students: " << students.size() << endl;
+    for(vector<Student_info>::size_type i = 0; i != students.size(); i++){
+        cout << "name: " << students[i].name << endl; 
     }
 
     streamsize prec = cout.precision();
     cout << setprecision(3);
-    // cout << "size of students: " << students.size() << endl;
 
     for (auto& s : students)
     {
         try
         {
             double final_grade = grade(s);
-            cout << s.name << ": " << final_grade << endl;
+            cout << s.name
+                 << string( maxl + 1 - s.name.size(), ' ')
+                 << ": " << final_grade << endl;
         }
         catch (std::domain_error e)
         {
             cout << "Error: " << endl;
             cout << e.what() << endl;
+            return 1;
         }
     }
     cout << setprecision(prec) << endl;
