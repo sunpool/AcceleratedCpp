@@ -9,20 +9,16 @@ class Student_info
 {
 public:
     Student_info(): midterm(0), final(0) {};
-    Student_info(std::istream& is)
-    {
-        read(is);
-    };
+    Student_info(std::istream& is) { read(is); };
 
     // Student_info(const Student_info&);
     // Student_info& operator=(const Student_info&);
 
+    bool valid() const { return !hws.empty(); };
     std::istream& read(std::istream&);
+    void read_row(std::string&);
     double grade() const;
-    std::string name() const
-    {
-        return n;
-    };
+    std::string name() const { return n; };
 
 private:
     std::string n;

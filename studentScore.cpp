@@ -5,9 +5,10 @@
 #include <iomanip>
 #include <vector>
 #include <string>
-#include <stdexcept> 
+#include <stdexcept>
+#include <fstream>
 
-#include "Student_info.h" 
+#include "Student_info.h"
 #include "median.h"
 #include "grade.h"
 
@@ -19,22 +20,43 @@ using std::setprecision;
 using std::string;
 using std::vector;
 
-int main()
+int main(int argc, char ** argv)
 {
     vector<Student_info> students;
     Student_info sif;
 
     string::size_type maxl = 0;
-    cout << "Enter student records as: Name midterm final hw1 hw2 hw3 ..." << endl;
-    while ( sif.read(cin) )
+    if (argc > 1)
     {
-        maxl = std::max(maxl, sif.name().size());
-        students.push_back(sif);
-        cout << sif.name() << endl;
+        // string file = argv[1];
+        // std::ifstream infile(file.c_str());
+        std::ifstream infile(argv[1]);
+        if(infile) {
+            string str;
+            while(getline(infile, str)){
+                maxl = std::max(maxl, sif.name().size());
+                sif.read_row(str);
+                students.push_back(sif);
+            }
+        } else {
+            std::cerr << "Cannot open file " << argv[1] << endl; 
+        }
     }
+    else
+    {
+        cout << "Enter student records as: Name midterm final hw1 hw2 hw3 ..." << endl;
+        while ( sif.read(cin) )
+        {
+            maxl = std::max(maxl, sif.name().size());
+            students.push_back(sif);
+            cout << sif.name() << endl;
+        }
+    }
+
     cout << "Total number of students: " << students.size() << endl;
-    for(vector<Student_info>::size_type i = 0; i != students.size(); i++){
-        cout << "name: " << students[i].name() << endl; 
+    for (vector<Student_info>::size_type i = 0; i != students.size(); i++)
+    {
+        cout << "name: " << students[i].name() << endl;
     }
 
     streamsize prec = cout.precision();
