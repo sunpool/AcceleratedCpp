@@ -26,15 +26,15 @@ int main()
 
     string::size_type maxl = 0;
     cout << "Enter student records as: Name midterm final hw1 hw2 hw3 ..." << endl;
-    while ( read(cin, sif) )
+    while ( sif.read(cin) )
     {
-        maxl = std::max(maxl, sif.name.size());
+        maxl = std::max(maxl, sif.name().size());
         students.push_back(sif);
-        cout << sif.name << endl;
+        cout << sif.name() << endl;
     }
     cout << "Total number of students: " << students.size() << endl;
     for(vector<Student_info>::size_type i = 0; i != students.size(); i++){
-        cout << "name: " << students[i].name << endl; 
+        cout << "name: " << students[i].name() << endl; 
     }
 
     streamsize prec = cout.precision();
@@ -46,9 +46,9 @@ int main()
     {
         try
         {
-            double final_grade = grade(s);
-            cout << s.name
-                 << string( maxl + 1 - s.name.size(), ' ')
+            double final_grade = s.grade();
+            cout << s.name()
+                 << string( maxl + 1 - s.name().size(), ' ')
                  << ": " << final_grade << endl;
         }
         catch (std::domain_error e)

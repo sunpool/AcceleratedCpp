@@ -1,5 +1,7 @@
 #include "Student_info.h"
 #include <iterator>
+#include <algorithm> 
+#include "grade.h"
 
 using std::string;
 using std::vector;
@@ -18,20 +20,20 @@ istream& read_hw(istream& in, vector<double>& hws)
         //     hws.push_back(hw);
         
         // new way: 
-        copy(istream_iterator<double>(in), istream_iterator<double>(), back_inserter(hws));
+        std::copy(istream_iterator<double>(in), istream_iterator<double>(), back_inserter(hws));
         in.clear();
     }
     return in;
 }
 
-istream& read(istream& in, Student_info& s)
-{
-    // cout << "Enter Name, midterm score, and final score: " << endl;
-    in >> s.name >> s.midterm >> s.final;
-    // cout << "Enter homework scores: " << endl;
-    read_hw(in, s.hws);
-    return in;
+double Student_info::grade() const {
+    return ::grade(midterm, final, hws);
 }
 
+std::istream& Student_info::read(std::istream& in){
+    in >> n >> midterm >> final;
+    ::read_hw(in, hws);
+    return in;
+}
 
 

@@ -5,17 +5,36 @@
 #include <string>
 #include <iostream>
 
-struct Student_info
+class Student_info
 {
-    std::string name;
+public:
+    Student_info(): midterm(0), final(0) {};
+    Student_info(std::istream& is)
+    {
+        read(is);
+    };
+
+    // Student_info(const Student_info&);
+    // Student_info& operator=(const Student_info&);
+
+    std::istream& read(std::istream&);
+    double grade() const;
+    std::string name() const
+    {
+        return n;
+    };
+
+private:
+    std::string n;
     double midterm, final;
     std::vector<double> hws;
 };
 
-auto compare = [](const Student_info& a, const Student_info& b) {
-    return a.name < b.name;
+auto compare = [](const Student_info& a, const Student_info& b)
+{
+    return a.name() < b.name();
 };
-std::istream& read_hw(std::istream& , std::vector<double>& );
-std::istream& read(std::istream& , Student_info& );
+std::istream& read_hw(std::istream&, std::vector<double>& );
+std::istream& read(std::istream&, Student_info& );
 
 #endif
