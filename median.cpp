@@ -1,14 +1,15 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include<stdexcept>
+#include <stdexcept>
 
 using std::string;
 using std::vector;
 
-double median(vector<double> vec)
+template<class T>
+T median(std::vector<T> vec)
 {
-    typedef vector<double>::size_type vec_sz;
+    typedef typename std::vector<T>::size_type vec_sz;
     vec_sz size = vec.size();
     if ( size == 0)
         throw std::domain_error("Median of empty vector is undefinded");
