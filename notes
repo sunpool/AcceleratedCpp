@@ -1,4 +1,93 @@
-``
+/* 
+ * Qishi club C++ project, quote parser
+ *
+ * what I have learnt from the master sample code
+ *
+ * */
+
+1. use namespace for local file, ?? static ?? func
+2. the way to parse float, the place to use float (float is still useful)
+3. other c types: uint64_t, unit16_t, unint32_t
+4. constexpr std::size_t for general size type
+5. filesystem::path -> cannot see why it is useful. Use infile.fail() instead
+of if(infile). Throw runtime_error() if cannot load file
+6. use final in class def
+7. use = default
+
+a. use Cmake 
+b. do not use "using"
+c. 
+
+
+namespace {
+    inline float float_from_chars(char const *start, char const *end) {
+        float res = 0.0f;
+        while (start != end ) {
+            if (*start == '.') {
+                ++start;
+                break;
+            }
+            res = res * 10.0f + static_cast<float>(*start - '0');
+            ++start;
+        }
+        float factor = 10.0f;
+        while (start != end) {
+            res += static_cast<float>(*start - '0') / factor;
+            factor *= 10.0f;
+            ++start;
+        }
+        return res;
+    }
+}
+
+
+    std::filesystem::path const path(pathName);
+    std::ifstream infile(path);
+    if (infile.fail()) {
+        throw std::runtime_error("Cannot open " + pathName + ". Make sure it exists");
+    }
+
+    constexpr std::size_t N = 36710000;
+    this->time_stamp.reserve(N);
+    this->security_id.reserve(N);
+    this->bid_size.reserve(N);
+    this->ask_size.reserve(N);
+    this->bid_price.reserve(N);
+    this->ask_price.reserve(N);
+
+    std::string line;
+    // no need to parse header
+    std::getline(infile, line);
+    std::cout << line << std::endl;
+
+    uint64_t timeStamp;
+    uint16_t id;
+    float bid, ask;
+    uint32_t bSize, aSize;
+
+    std::vector<std::string> lines;
+    lines.reserve(N);
+    while (std::getline(infile, line)) {
+        std::string_view lineView(line);
+
+        // timeStamp
+        std::size_t start1 = 0;
+        std::size_t end1 = lineView.substr(start1).find(',');
+
+        // id
+        std::size_t start2 = end1 + 1;
+        std::size_t end2 = start2 + lineView.substr(start2).find(',');
+
+        std::from_chars(line.data() + start1, line.data() + end1, timeStamp);
+        std::from_chars(line.data() + start2, line.data() + end2, id);
+        // std::from_chars doesn't support float/double yet on clang, use my own parser
+        bid = float_from_chars(line.data() + start3, line.data() + end3);
+
+        this->time_stamp.push_back(timeStamp);
+        this->security_id.push_back(id);
+
+
+
 WARNING: The script userpath is installed in '/Users/hanche/Library/Python/3.6/bin' which is not on PATH.
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
   WARNING: The script pipx is installed in '/Users/hanche/Library/Python/3.6/bin' which is not on PATH.
