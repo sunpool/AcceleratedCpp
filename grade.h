@@ -8,6 +8,8 @@
 
 double grade(double , double , double );
 double grade(double , double , const std::vector<double>& );
-double grade( const Student_info& );
+
+// declared, but not called, OK at compile time
+// double grade( const Student_info& );
 
 #endif
