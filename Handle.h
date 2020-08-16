@@ -13,10 +13,10 @@ public:
  * Access control is static, compile time feature, and only per-class control
  * can be reasonbly done at complie time. 
  *  */
-    Handle(const Handle& h): pt(h.pt), refpt(h.refpt) {};
+    Handle(const Handle& h): pt(h.pt), refpt(h.refpt) {++*refpt;};
     // from raw to handler, cannot be const T, b/c later Handler needs to
     // delete this passed-in object.
-    Handle(T* p): pt(p), refpt(new std::size_t(1)) {++*refpt;};
+    Handle(T* p): pt(p), refpt(new std::size_t(1)) {};
     ~Handle();
 
     Handle& operator=(const Handle& );
@@ -50,7 +50,7 @@ Handle<T>& Handle<T>::operator=(const Handle& rhs)
 {
     // note: .efpt is not changed as required by const parameter, but what it refers to is changed.
     ++*rhs.refpt; 
-    if (--*rhs.refpt)
+    if (--*refpt == 0)
     {
         delete pt;
         delete refpt;
