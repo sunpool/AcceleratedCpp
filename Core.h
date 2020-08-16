@@ -10,7 +10,9 @@ class Core
 public:
     Core(): midterm(0), final(0) {};
     Core(std::istream& is) { read(is); };
-    ~Core() {};
+    // if non-const fns parameter, later you cannot call like new
+    // Core(str.substr(1));
+    Core(const std::string& st) { read_row(st); };
 
     // Core(const Core&);
     // Core& operator=(const Core&);
@@ -19,8 +21,11 @@ public:
     bool valid() const { return !hws.empty(); };
 
     virtual std::istream& read(std::istream&);
-    virtual void read_row(std::string&);
+    // note: if parameter is not const, then cannot use temporary input like
+    // read_row( string(i, j);
+    virtual void read_row(const std::string&);
     virtual double grade() const;
+    virtual ~Core() {};
 
 protected:
     std::istream& read_common(std::istream&);
@@ -37,9 +42,10 @@ class Grad : public Core
 public:
     Grad(): thesis(0) {};
     Grad(std::istream& is) { read(is); };
+    Grad(const std::string& st) { read_row(st); };
 
     std::istream& read(std::istream&);
-    void read_row(std::string&);
+    void read_row(const std::string&);
     double grade() const;
 
 private:

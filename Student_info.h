@@ -5,25 +5,27 @@
 #include <string>
 #include <iostream>
 
+#include "Handle.h"
+#include "Core.h"
+
 class Student_info
 {
 public:
-    Student_info(): midterm(0), final(0) {};
+    Student_info() {}; 
     Student_info(std::istream& is) { read(is); };
 
-    // Student_info(const Student_info&);
-    // Student_info& operator=(const Student_info&);
+    std::string name() const { return pt ? pt->name() : throw std::runtime_error("uninitialized student"); };
+    // bool valid() const { return !hws.empty(); };
+    std::istream& read(std::istream&); 
+    void read_row(std::string&); 
+    double grade() const { return pt ? pt->grade() : throw std::runtime_error("uninitialized student"); };
 
-    std::string name() const { return n; };
-    bool valid() const { return !hws.empty(); };
-    std::istream& read(std::istream&);
-    void read_row(std::string&);
-    double grade() const;
+    static bool compare(const Student_info& a, const Student_info& b) {
+        return a.name() < b.name();
+    }
 
 private:
-    std::string n;
-    double midterm, final;
-    std::vector<double> hws;
+    Handle<Core> pt; 
 };
 
 auto compare = [](const Student_info& a, const Student_info& b)
@@ -31,6 +33,6 @@ auto compare = [](const Student_info& a, const Student_info& b)
     return a.name() < b.name();
 };
 std::istream& read_hw(std::istream&, std::vector<double>& );
-std::istream& read(std::istream&, Student_info& );
+// std::istream& read(std::istream&, Student_info& );
 
 #endif

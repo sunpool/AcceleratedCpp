@@ -5,7 +5,8 @@
 
 #include "Core.h"
 #include "grade.h"
-/* 
+
+// global func
 std::istream& read_hw(std::istream& in, std::vector<double>& hws)
 {
     if (in)
@@ -22,7 +23,6 @@ std::istream& read_hw(std::istream& in, std::vector<double>& hws)
     }
     return in;
 }
- */
 
 /*
  * Core
@@ -41,7 +41,7 @@ std::istream& Core::read(std::istream& in)
     return in;
 };
 
-void Core::read_row(std::string& s)
+void Core::read_row(const std::string& s)
 {
     std::istringstream row(s);
     read_common(row);
@@ -65,7 +65,7 @@ std::istream& Grad::read(std::istream& in)
     return in;
 };
 
-void Grad::read_row(std::string& st)
+void Grad::read_row(const std::string& st)
 {
     std::istringstream row(st);
     read_common(row);

@@ -9,8 +9,9 @@
 #include <fstream>
 
 #include "Student_info.h"
-#include "median.h"
-#include "grade.h"
+// #include "median.h"
+// #include "grade.h"
+// #include "Handle.h"
 
 using std::cout;
 using std::endl;
@@ -22,7 +23,7 @@ using std::vector;
 
 int main(int argc, char ** argv)
 {
-    vector<Student_info> students;
+    vector< Student_info > students;
     Student_info sif;
 
     string::size_type maxl = 0;
@@ -62,7 +63,7 @@ int main(int argc, char ** argv)
     streamsize prec = cout.precision();
     cout << setprecision(3);
 
-    std::sort(begin(students), end(students), compare);
+    std::sort(begin(students), end(students), Student_info::compare);
 
     for (auto& s : students)
     {
