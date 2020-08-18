@@ -1,6 +1,8 @@
 #ifndef Guard_Vec_h
 #define Guard_Vec_h
 
+#include <cstddef> // ptrdiff_t, size_t
+
 template<class T>
 class Vec final {
     public: 
@@ -10,13 +12,16 @@ class Vec final {
         typedef T& reference;
         typedef const T& const_reference;
         typedef T value_type;
-        typedef size_t size_type;
+        typedef std::size_t size_type;
 
         Vec() { create(); }; 
-        Vec(int n) { create(n); };
-        Vec(int n, T t) { create(n, t); };
+        // Vec(int n) { create(n); };
+        explicit Vec(size_type n, const T& t = T()) { create(n, t); };
+        Vec(const Vec& vec) { create(vec.begin(), vec.end()); };
         Vec(iterator a, iterator b) { create(a, b); };
-        ~Vec(); 
+        ~Vec() { uncreate(); }; 
+
+        Vec& operator=(const Vec&);
 
         size_type size() const { return avail - data; };
 
@@ -25,8 +30,8 @@ class Vec final {
         iterator end() { return avail; };
         const_iterator end() const { return avail; };
 
-        T& operator[](int i) {return *(iter+i); };
-        const T& operator[](int i) {return *(iter+i); };
+        T& operator[](size_type i) {return *(data+i); };
+        const T& operator[](size_type i) const {return *(data+i); };
 
         void push_back(const T& t) {
             if(limit == avail)
@@ -42,8 +47,8 @@ class Vec final {
         allocator<T> alloc; 
 
         create();
-        create(int);
-        create(int , const T& );
+        // create(size_type);
+        create(size_type, const T& );
         create(iterator, iterator);
         uncreate(iterator);
 
@@ -61,61 +66,76 @@ public:
 }
 
 template<class In, class for>
-For uninitialized_copy(In, In, For);
+For uninitialized_copy(In, In, For); // return iter that is one pass last element 
 
 template<class For, class T>
 For uninitialized_fill(For, For, const T&);
 
 */
 
+
+
 template<class T> 
 void Vec<T>::create(){
     data = avail = limit = nullptr;
 }
 
-template<class T> 
-void Vec<T>::create(std::size_t n){
-    data = avail = alloc.allocate(n);
-    limit = data + n;
-}
+// template<class T>
+// void Vec<T>::create(std::size_t n){
+//     data = avail = alloc.allocate(n);
+//     limit = data + n;
+// }
 
 template<class T> 
-void Vec<T>::create(std::size_t n, const T& t){
+void Vec<T>::create(size_type n, const T& t){
     data = alloc.allocate(n);
-    uninitialized_fill(data, data + n, t);
     avail = limit = data + n;
+    uninitialized_fill(data, limit, t);
 }
 
 template<class T> 
-void Vec<T>::create(iterator a, iterator b){
-    data = alloc.allocate(b - a);
-    uninitialized_copy(a, b, data);
-    avail = limit = data + b-a;
+void Vec<T>::create(const_iterator i, const_iterator j){
+    data = alloc.allocate(j - i);
+    avail = limit = uninitialized_copy(i, j, data);
 }
 
 template<class T> 
 void Vec<T>::uncreate() {
-    while(data != avail) {
-        alloc.destroy(--avail);
-    } 
-    alloc.deallocate(data, limit - data);
+    // NOTE: C++ style of validity check, and in-/de-creamental variable.
+    // Foregot of those in init check
+    if(data) {
+        iterator it = avail;
+        while(data != it) 
+            alloc.destroy(--it);
+
+        alloc.deallocate(data, limit - data);
+    }
 
     data = avail = limit = nullptr; 
+}
+
+template<class T>
+Vec<T>& Vec<T>::operator=(const Vec& rhs) {
+    if(this != &rhs) {
+        // TODO: this is not exception safe
+        uncreate();
+        create(rhs.begin(), rhs.end()); 
+    } 
+    return *this; 
 }
 
 // TODO: better to use swap to be exception safe
 template<class T>
 void Vec<T>::grow() {
-    std::size_t new_sz = (limit - data) * 2; 
+    size_type new_sz = std::max( (limit - data) * 2, ptrdiff_t(1) ); 
 
-    auto new_ptr = alloc.allocate(new_sz); 
-    uninitialized_copy(data, avail, new_ptr);
+    iterator new_ptr = alloc.allocate(new_sz); 
+    iterator new_avail = uninitialized_copy(data, avail, new_ptr);
     
-    std::size_t old_sz = size();
     uncreate(); 
 
     data = new_prt; 
-    avail = data + old_sz; 
+    avail = new_avail;
     limit = data + new_sz;
 }
 
