@@ -2,6 +2,7 @@
 #define Guard_Vec_h
 
 #include <cstddef> // ptrdiff_t, size_t
+#include <memory>
 
 template<class T>
 class Vec final {
