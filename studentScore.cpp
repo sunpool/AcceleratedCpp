@@ -3,12 +3,13 @@
 #include <algorithm>
 #include <ios>
 #include <iomanip>
-#include <vector>
+// #include <vector>
 #include <string>
 #include <stdexcept>
 #include <fstream>
 
 #include "Student_info.h"
+#include "Vec/Vec.h"
 // #include "median.h"
 // #include "grade.h"
 // #include "Handle.h"
@@ -19,11 +20,11 @@ using std::cin;
 using std::streamsize;
 using std::setprecision;
 using std::string;
-using std::vector;
+// using std::vector;
 
 int main(int argc, char ** argv)
 {
-    vector< Student_info > students;
+    Vec< Student_info > students;
     Student_info sif;
 
     string::size_type maxl = 0;
@@ -55,7 +56,7 @@ int main(int argc, char ** argv)
     }
 
     cout << "Total number of students: " << students.size() << endl;
-    for (vector<Student_info>::size_type i = 0; i != students.size(); i++)
+    for (Vec<Student_info>::size_type i = 0; i != students.size(); i++)
     {
         cout << "name: " << students[i].name() << endl;
     }
@@ -63,7 +64,7 @@ int main(int argc, char ** argv)
     streamsize prec = cout.precision();
     cout << setprecision(3);
 
-    std::sort(begin(students), end(students), Student_info::compare);
+    std::sort(std::begin(students), std::end(students), Student_info::compare);
 
     for (auto& s : students)
     {

@@ -45,17 +45,17 @@ class Vec final {
         iterator avail;
         iterator limit;
 
-        allocator<T> alloc; 
+        std::allocator<T> alloc; 
 
-        create();
-        // create(size_type);
-        create(size_type, const T& );
-        create(iterator, iterator);
-        uncreate(iterator);
+        void create();
+        // void create(size_type);
+        void create(size_type, const T& );
+        void create(const_iterator, const_iterator);
+        void uncreate();
 
         void grow(); 
         void unchecked_append(const T&);
-}
+};
 
 /*  
 Template<class T> class allocator {
@@ -91,13 +91,13 @@ template<class T>
 void Vec<T>::create(size_type n, const T& t){
     data = alloc.allocate(n);
     avail = limit = data + n;
-    uninitialized_fill(data, limit, t);
+    std::uninitialized_fill(data, limit, t);
 }
 
 template<class T> 
 void Vec<T>::create(const_iterator i, const_iterator j){
     data = alloc.allocate(j - i);
-    avail = limit = uninitialized_copy(i, j, data);
+    avail = limit = std::uninitialized_copy(i, j, data);
 }
 
 template<class T> 
@@ -125,17 +125,18 @@ Vec<T>& Vec<T>::operator=(const Vec& rhs) {
     return *this; 
 }
 
-// TODO: better to use swap to be exception safe
+// note, it is even better to use swap to be exception safe
+// following is c++98 style creation first and then "append". also exception safe
 template<class T>
 void Vec<T>::grow() {
     size_type new_sz = std::max( (limit - data) * 2, ptrdiff_t(1) ); 
 
     iterator new_ptr = alloc.allocate(new_sz); 
-    iterator new_avail = uninitialized_copy(data, avail, new_ptr);
+    iterator new_avail = std::uninitialized_copy(data, avail, new_ptr);
     
     uncreate(); 
 
-    data = new_prt; 
+    data = new_ptr; 
     avail = new_avail;
     limit = data + new_sz;
 }
