@@ -2,30 +2,43 @@
 #define Guard_Str_h
 
 #include "Vec/Vec.h"
-#include "Handle.h"
 
 class Str final {
+        friend std::istream& operator>>(std::istream&, Str&);
+
     public: 
-        typedef Vec::size_type size_type;
+        typedef Vec<char>::size_type size_type;
 
-        friend std::istream& operator>>(Str&);
+        Str(){}
+        // note, how data is initialized. data() takes in constructor
+        // parameters, no need to do new Vec(), which will be a pointer
+        // paramter that matches nothing
+        Str(size_type n, char c): data(n, c) {}
 
-        Str(){};
-        Str(size_type n, char c): data(new Vec(n, c)) {};
-        // what happens to data that created at initialization stage?
-        Str(const Str& str) { data.create(str.data.begin(), str.data.end()); };
-        ~Str(){};
+        // TODO, what happens to the default copy constructor then? 
+        Str(const char* sch) { 
+            std::copy(sch, sch + std::strlen(sch), std::back_inserter(data));
+        }
+        template<class In> Str(In b, In e) {
+            std::copy(b, e, std::back_inserter(data));
+        }
 
-        Str& operator=(const Str&);
+        Str& operator+=(const Str& b) {
+            std::copy(b.data.begin(), b.data.end(), std::back_inserter(data));
+            return *this;
+        }
 
-        size_type size() const { return data.size(); }; 
-        void reserve(size_type n) { data.reserve(n); };
+        char& operator[](size_type i) {return data[i]; }
+        const char& operator[](size_type i) const { return data[i]; }
+
+        size_type size() const { return data.size(); } 
+        // void reserve(size_type n) { data.reserve(n); };
 
     private:
         Vec<char> data;
 };
 
-std::ostream& operator<<(std::ostream& os, const Str& str);
-Str& operator+(const Str& a, const Str& b);
+std::ostream& operator<<(std::ostream&, const Str&);
+Str& operator+(const Str&, const Str&);
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <cstddef> // ptrdiff_t, size_t
 #include <memory>
+#include <algorithm>
 
 template<class T>
 class Vec final {
@@ -27,6 +28,7 @@ class Vec final {
         size_type size() const { return avail - data; };
         void reserve(size_type);
         // void resize(size_type);
+        void clear() { uncreate(); }
 
         iterator begin() { return data; };
         const_iterator begin() const { return data; };
