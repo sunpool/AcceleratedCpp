@@ -4,12 +4,13 @@
 #include <ios>
 #include <iomanip>
 // #include <vector>
-#include <string>
+// #include <string>
 #include <stdexcept>
 #include <fstream>
 
 #include "Student_info.h"
 #include "Vec/Vec.h"
+#include "Str/Str.h"
 // #include "median.h"
 // #include "grade.h"
 // #include "Handle.h"
@@ -19,22 +20,25 @@ using std::endl;
 using std::cin;
 using std::streamsize;
 using std::setprecision;
-using std::string;
+// using std::string;
 // using std::vector;
+using myStr = Str; 
 
 int main(int argc, char ** argv)
 {
     Vec< Student_info > students;
     Student_info sif;
+    std::cout << "using mystr and Str/Str.cpp" << std::endl;
 
-    string::size_type maxl = 0;
+    myStr::size_type maxl = 0;
     if (argc > 1)
     {
-        // string file = argv[1];
+        // myStr file = argv[1];
         // std::ifstream infile(file.c_str());
+        
         std::ifstream infile(argv[1]);
         if(infile) {
-            string str;
+            std::string str;
             while(getline(infile, str)){
                 maxl = std::max(maxl, sif.name().size());
                 sif.read_row(str);
@@ -72,7 +76,7 @@ int main(int argc, char ** argv)
         {
             double final_grade = s.grade();
             cout << s.name()
-                 << string( maxl + 1 - s.name().size(), ' ')
+                 << myStr( maxl + 1 - s.name().size(), ' ')
                  << ": " << final_grade << endl;
         }
         catch (std::domain_error e)

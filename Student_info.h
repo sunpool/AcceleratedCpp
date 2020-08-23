@@ -8,13 +8,16 @@
 #include "Handle.h"
 #include "Core.h"
 
+#include "Str/Str.h"
+using myStr = Str;
+
 class Student_info
 {
 public:
     Student_info() {}; 
     Student_info(std::istream& is) { read(is); };
 
-    std::string name() const { return pt ? pt->name() : throw std::runtime_error("uninitialized student"); };
+    myStr name() const { return pt ? pt->name() : throw std::runtime_error("uninitialized student"); };
     // bool valid() const { return !hws.empty(); };
     std::istream& read(std::istream&); 
     void read_row(std::string&); 

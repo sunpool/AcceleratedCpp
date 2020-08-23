@@ -2,8 +2,12 @@
 #define Guard_Core_h
 
 #include <vector>
-#include <string>
 #include <iostream>
+
+// Str/Str.h is not compitable with ifstream and istringstream fns yet
+#include <string>
+#include "Str/Str.h"
+using myStr = Str;
 
 class Core
 {
@@ -17,7 +21,7 @@ public:
     // Core(const Core&);
     // Core& operator=(const Core&);
 
-    std::string name() const { return n; };
+    myStr name() const { return n; };
     bool valid() const { return !hws.empty(); };
 
     virtual std::istream& read(std::istream&);
@@ -33,7 +37,7 @@ protected:
     std::vector<double> hws;
 
 private:
-    std::string n;
+    myStr n;
 };
 
 

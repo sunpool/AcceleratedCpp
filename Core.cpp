@@ -6,6 +6,10 @@
 #include "Core.h"
 #include "grade.h"
 
+#include "Str/Str.h"
+using myStr = Str;
+
+
 // global func
 std::istream& read_hw(std::istream& in, std::vector<double>& hws)
 {
@@ -41,6 +45,7 @@ std::istream& Core::read(std::istream& in)
     return in;
 };
 
+// TODO, friend func for ifstream getline in Str class 
 void Core::read_row(const std::string& s)
 {
     std::istringstream row(s);
@@ -65,9 +70,10 @@ std::istream& Grad::read(std::istream& in)
     return in;
 };
 
-void Grad::read_row(const std::string& st)
+// TODO, friend func for ifstream getline in Str class 
+void Grad::read_row(const std::string& s)
 {
-    std::istringstream row(st);
+    std::istringstream row(s);
     read_common(row);
     row >> thesis;
     ::read_hw(row, hws);
