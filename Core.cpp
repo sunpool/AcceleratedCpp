@@ -36,14 +36,14 @@ std::istream& Core::read_common(std::istream& in)
 {
     in >> n >> midterm >> final;
     return in;
-};
+}
 
 std::istream& Core::read(std::istream& in)
 {
     read_common(in);
     read_hw(in, hws);
     return in;
-};
+}
 
 // TODO, friend func for ifstream getline in Str class 
 void Core::read_row(const std::string& s)
@@ -51,7 +51,7 @@ void Core::read_row(const std::string& s)
     std::istringstream row(s);
     read_common(row);
     ::read_hw(row, hws);
-};
+}
 
 double Core::grade() const
 {
@@ -68,7 +68,7 @@ std::istream& Grad::read(std::istream& in)
     in >> thesis;
     read_hw(in, hws);
     return in;
-};
+}
 
 // TODO, friend func for ifstream getline in Str class 
 void Grad::read_row(const std::string& s)
@@ -77,7 +77,7 @@ void Grad::read_row(const std::string& s)
     read_common(row);
     row >> thesis;
     ::read_hw(row, hws);
-};
+}
 
 double Grad::grade() const
 {
