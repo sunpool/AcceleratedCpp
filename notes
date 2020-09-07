@@ -1,3 +1,35 @@
+
+
+pack ...  c++11 
+(... op pack)   c++17
+(pack op ...) 
+(init op ... op pack) 
+(pack op ... op init)
+sizeof...
+
+vec.pus_back(v), ...
+
+
+
+Concepts library
+
+Standardization of Parallelism TS
+
+Structured Bindings 
+
+Guaranteed copy elision
+
+File system library
+
+Single quote as digit separator
+
+constexpr for <chrono>
+
+init-statements for range-based for
+
+
+
+
 /* 
  * Qishi club C++ project, quote parser
  *

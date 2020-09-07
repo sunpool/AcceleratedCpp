@@ -7,6 +7,9 @@
 
 template<class T>
 class Vec final {
+
+        friend void swap(Vec&, Vec&);
+
     public: 
 
         typedef T* iterator; 
@@ -23,7 +26,7 @@ class Vec final {
         Vec(const_iterator a, const_iterator b) { create(a, b); };
         ~Vec() { uncreate(); }; 
 
-        Vec& operator=(const Vec&);
+        Vec& operator=(Vec);
 
         size_type size() const { return avail - data; };
         void reserve(size_type);
@@ -101,8 +104,11 @@ void Vec<T>::create(size_type n, const T& t){
 
 template<class T> 
 void Vec<T>::create(const_iterator i, const_iterator j){
-    // TODO: feels like I need to uncreate if object already holds data for copy
+    // DONE: feels like I need to uncreate if object already holds data for copy
     // constructor 
+    // Answer: no need, as in this implementation. it is called either in ctor
+    // where obj is initializing first time, or uncreate() is called before
+    // this call.
     data = alloc.allocate(j - i);
     avail = limit = std::uninitialized_copy(i, j, data);
 }
@@ -122,18 +128,28 @@ void Vec<T>::uncreate() {
     data = avail = limit = nullptr; 
 }
 
+// swap func, used for operator=
+template<typename T> 
+inline void swap(Vec<T>& lhs, Vec<T>& rhs) {
+    using std::swap; // enable ADL, not necessary in our case, but good practice in general 
+
+    swap(lhs.data, rhs.data); 
+    swap(lhs.avail, rhs.avail); 
+    swap(lhs.limit, rhs.limit); 
+}
+
+// rhs passed in as value, to ensure an allocated temporary RAM and Vec
+// constructed ready. Also ensured that this temporary variable will be
+// deconstructed when leaving this fns, where old data/resources from *this are thrown
+// away. 
 template<class T>
-Vec<T>& Vec<T>::operator=(const Vec& rhs) {
-    if(this != &rhs) {
-        // TODO: this is not exception safe, need swap implementation
-        uncreate();
-        create(rhs.begin(), rhs.end()); 
-    } 
+Vec<T>& Vec<T>::operator=(Vec rhs) {
+    swap(*this, rhs);
     return *this; 
 }
 
 // note, it is even better to use swap to be exception safe
-// following is c++98 style creation first and then "append". also exception safe
+// following is c++98 style creation first and then "append". also exception safe, although less optimal considering duplication in RAM management. Refer operator= for swap solution
 template<class T>
 void Vec<T>::grow(size_type new_sz) {
     iterator new_ptr = alloc.allocate(new_sz); 
