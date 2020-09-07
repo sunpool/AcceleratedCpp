@@ -26,13 +26,13 @@ std::ostream& operator<<(std::ostream& os, const Str& str) {
 
 std::istream& operator>>(std::istream& is, Str& str){
     if(is) {
-        str.data.clear();
+        str.data->clear();
 
         char c; 
         while( is.get(c) && isspace(c) );
         
         if(is) {
-            do str.data.push_back(c); 
+            do str.data->push_back(c); 
             while( is.get(c) && !isspace(c) );
 
             if(is)
