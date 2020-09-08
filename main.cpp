@@ -22,30 +22,35 @@ using std::streamsize;
 using std::setprecision;
 // using std::string;
 // using std::vector;
-using myStr = Str; 
+using myStr = Str;
 
-int main(int argc, char ** argv)
+
+namespace
 {
-    Vec< Student_info > students;
-    Student_info sif;
-    std::cout << "using mystr and Str/Str.cpp" << std::endl;
 
+myStr::size_type parse_input(int argc, char ** argv, Vec< Student_info> &students )
+{
+    Student_info sif;
     myStr::size_type maxl = 0;
     if (argc > 1)
     {
         // myStr file = argv[1];
         // std::ifstream infile(file.c_str());
-        
+
         std::ifstream infile(argv[1]);
-        if(infile) {
+        if (infile)
+        {
             std::string str;
-            while(getline(infile, str)){
+            while (getline(infile, str))
+            {
                 maxl = std::max(maxl, sif.name().size());
                 sif.read_row(str);
                 students.push_back(sif);
             }
-        } else {
-            std::cerr << "Cannot open file " << argv[1] << endl; 
+        }
+        else
+        {
+            std::cerr << "Cannot open file " << argv[1] << endl;
         }
     }
     else
@@ -58,6 +63,16 @@ int main(int argc, char ** argv)
             cout << sif.name() << endl;
         }
     }
+    return maxl;
+}
+
+
+}
+
+int main(int argc, char ** argv)
+{
+    Vec< Student_info > students;
+    auto maxl = parse_input( argc, argv, students );
 
     cout << "Total number of students: " << students.size() << endl;
     for (Vec<Student_info>::size_type i = 0; i != students.size(); i++)
