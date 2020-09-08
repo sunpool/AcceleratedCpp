@@ -5,3 +5,4 @@ a.out*
 debug*
 tmp
 .DS_Store
+*.o

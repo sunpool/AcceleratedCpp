@@ -3,6 +3,10 @@
 #include <iostream>
 #include <algorithm>
 
+// NOTE: following is to save compile time template instantiation, when you are sure there is another instance of hte Vec<char> in the same binary.
+// extern template class Vec<char>;
+
+
 // data member is STL container, like variable, no need for copy- =- and ~- fns
 // Str& Str::operator=(const Str& str) {
 //     if(this != &str){
@@ -48,4 +52,9 @@ Str operator+(const Str& a, const Str& b) {
     Str c = a; 
     c += b; 
     return c;
+}
+// rvalue input and return rvalue
+Str operator+(Str&& a, const Str& b) {
+    a += b; 
+    return std::move(a);
 }

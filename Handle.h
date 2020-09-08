@@ -1,6 +1,14 @@
 #ifndef Guard_Handle_h
 #define Guard_Handle_h
 
+#include <cstddef> 
+#include <stdexcept>
+
+template<typename T> 
+T* clone(const T* tp) {
+    return tp->clone();
+}
+
 template<class T>
 class Handle
 {
@@ -35,7 +43,7 @@ public:
         if(*refpt != 1){
             --*refpt;
             refpt = new std::size_t(1); 
-            pt = pt ? pt->clone() : 0;
+            pt = pt ? clone(pt) : 0;
         } 
     }
 

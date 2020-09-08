@@ -2,9 +2,16 @@
 #define Guard_Str_h
 
 #include "../Vec/Vec.h"
+// #include "../Vec/Vec_clone.cpp"
 #include <iostream>
 #include <algorithm>
 #include "../Handle.h"
+
+// NOTE: no includesion of the Vec_clone.cpp file, but implicitly need the .o
+// file at link time
+// error message was saying there are duplicated definition
+template<>
+Vec<char>* clone(const Vec<char>* );
 
 class Str final {
         friend std::istream& operator>>(std::istream&, Str&);
@@ -25,8 +32,7 @@ class Str final {
         Str(size_type n, char c): data(new Vec<char>(n, c)) {}
 
         // TODO, what happens to the default copy constructor then? 
-        Str(const char* sch): data(new Vec<char>) { 
-            std::copy(sch, sch + std::strlen(sch), std::back_inserter(*data));
+        Str(const char* sch): data(new Vec<char>) { std::copy(sch, sch + std::strlen(sch), std::back_inserter(*data));
         }
         template<class In> Str(In b, In e): data(new Vec<char>) {
             std::copy(b, e, std::back_inserter(*data));
